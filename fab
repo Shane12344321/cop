@@ -1,0 +1,66 @@
+You previously produced the research specification "Latent Search vs. Amortized 
+Lookup in Value-Distilled Transformers." Do NOT write code, do NOT reformat the 
+plan, do NOT re-pitch for reviewers. I am spending scarce access to you on the one 
+thing only you should do: hard conceptual reasoning that determines whether this 
+research program is worth running at all. Prioritize finding fatal flaws over 
+reassuring me.
+
+## Ground truth (do not re-derive; build on it)
+- "Look-ahead exists in chess nets" (Jenner 2024) and "look-ahead extends to ~7-ply 
+  / branching" (Cruz 2025) are established on Leela. Not ours to claim.
+- "Decodability != causality" (2510.09794) is established. Prop 1.1 is application, 
+  not discovery.
+- The only open lane: the DeepMind SEARCHLESS model — pure supervised distillation 
+  of Stockfish action-values, no search in the training loop — is mechanistically 
+  unstudied. The scientific question is: does value-distillation of a searcher 
+  induce internal search, or only lookup / compiled chunking?
+
+## The reasoning I need (in order of value)
+
+### 1. In-principle identifiability (the make-or-break question)
+The specimen is a BIDIRECTIONAL encoder that can compute over its 79 streams in 
+PARALLEL, not serially. Under that architecture, prove or refute: can the proposed 
+instruments (emergence-depth ordering, grid/path/subspace patching, the transplant 
+test, GAI/TRS head stats) actually SEPARATE the four hypotheses 
+{lookup, compile, search-A, search-B}? 
+- Identify every pair of hypotheses that is ALIASED under this design — i.e., 
+  produces identical predicted signatures — and therefore cannot be distinguished 
+  no matter how clean the data. 
+- For each aliasing, state whether it is fatal, or repairable with an added control, 
+  and what that control must be.
+- If the trichotomy is not identifiable in principle, say so plainly and stop 
+  defending it.
+
+### 2. Reformulate the depth budget for parallel computation
+The §1.3 serial "~1 layer/ply" bound assumes strictly serial simulation. A parallel 
+encoder can evaluate multiple plies concurrently across streams. Either derive the 
+distinct, testable signature that PARALLEL look-ahead would leave (and how it differs 
+observationally from compiled chunking), or demonstrate that parallel look-ahead and 
+compiled lookup are observationally indistinguishable here — in which case the 
+capacity argument must be abandoned, not softened.
+
+### 3. Steelman the nulls until they hurt
+Construct the STRONGEST possible version of H_lookup: a rich current-state feature 
+dictionary (attack maps, motif templates, king-safety fields) refined across depth. 
+Then adversarially check: can this steelmanned lookup reproduce EACH positive 
+signature the framework attributes to search (hot ghost-square patches, transplant 
+success, emergence-depth ordering)? Wherever it can, the corresponding experiment is 
+not diagnostic. Do the same for H_compile mimicking H_search. Report which 
+experiments survive this attack and which die.
+
+### 4. Name the crux
+Given what survives (1)-(3), identify the SINGLE experiment whose outcome would most 
+move a rational posterior between the still-distinguishable hypotheses, and quantify 
+why (what belief-shift it produces under each outcome). If no single experiment is 
+decisive, say that, and give the minimal conjunction that is.
+
+### 5. Where is being wrong most expensive?
+Rank the load-bearing assumptions of the whole program by (cost if false) x 
+(probability false). For the top three, state the cheapest possible check — 
+executable by a weaker model or a few hours of compute — that would falsify them 
+before any serious effort is spent.
+
+## Output
+End with a direct verdict: under what condition is this program worth running, and 
+what single finding would make you abandon it. Be willing to conclude it is not 
+worth running.
